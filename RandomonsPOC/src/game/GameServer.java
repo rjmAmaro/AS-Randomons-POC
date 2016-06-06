@@ -20,7 +20,7 @@ public class GameServer {
 
 	public static void main(String[] args) throws IOException, TimeoutException {
 		ConnectionFactory factory = new ConnectionFactory();
-		factory.setHost("rabbitmq");
+		factory.setHost("172.17.0.2");
 		factory.setPort(5672);
 		factory.setUsername("admin");
 		factory.setPassword("rabbito_coco");
@@ -100,14 +100,15 @@ public class GameServer {
 	private static void makeAttack(Writer writer, int moveId, Randomon attacker, Randomon receiver) throws IOException {
 		System.out.println("A: " + attacker.id + " # R: " + receiver.id + " # pp:" + attacker.attackValue);
 		receiver.sufferAttack(attacker.attackValue);
-		registerAttack(writer, moveId, attacker, receiver);
+		registerAttack(writer, moveId, attacker, receiver, attacker.attackValue);
 		System.out.println("RESULT - A: " + attacker.id + " - pp: " + attacker.lifePoints + " # R: " + receiver.id + " - pp: " + receiver.lifePoints);
 	}
 
-	private static void registerAttack(Writer writer, int moveId, Randomon attacker, Randomon receiver) throws IOException {
+	private static void registerAttack(Writer writer, int moveId, Randomon attacker, Randomon receiver, int attackValue) throws IOException {
 		writer.write(LocalDateTime.now().toString()
 				+ "#MOVE_ID:" + moveId 
 				+ "#ATTACKER_ID:" + attacker.id 
+				+ "#ATTACK_VALUE:" + attackValue
 				+ "#RECEIVER_ID:" + receiver.id
 				+ "#RECEIVER_RESULT_LIFE_VALUE:" + receiver.lifePoints + "\n");
 	}
